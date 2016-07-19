@@ -48,8 +48,12 @@ class ViewController: UIViewController {
     
     func displayQuestion() {
         
+        //to ensure a new trivia object is created so all the questions will show up again, or add all the Question into the questions[] once game over
+        
+        
+        print("the number of questions in the array = \(trivia.questions.count)")
         trivia.indexOfSelectedQuestion = GKRandomSource.sharedRandom().nextIntWithUpperBound(trivia.questions.count)
-        print("index \(trivia.indexOfSelectedQuestion)")
+        print("index \(trivia.indexOfSelectedQuestion) to check the questions are in random order")
 
         let questionObject = trivia.questions[trivia.indexOfSelectedQuestion]
         questionField.text = questionObject.question
@@ -80,11 +84,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func checkAnswer(sender: UIButton) {
-        // Increment the questions asked counter
-        trivia.questionsAsked += 1
+        
         
         let actualAnswer = trivia.questions[trivia.indexOfSelectedQuestion].answerIndex
-       
+        let stringActualAnswer = trivia.questions[trivia.indexOfSelectedQuestion].options[actualAnswer-1]
         
         switch sender {
         case option1:
@@ -92,42 +95,55 @@ class ViewController: UIViewController {
                 trivia.correctQuestions += 1
                 questionField.text = "Correct!"
             } else {
-                questionField.text = "Sorry, wrong answer!"
+                questionField.text = "Sorry, wrong answer! Correct Answer is \(stringActualAnswer)"
             }
         case option2:
             if (sender === option2 &&  actualAnswer == 2){
                 trivia.correctQuestions += 1
                 questionField.text = "Correct!"
             } else {
-                questionField.text = "Sorry, wrong answer!"
+                questionField.text = "Sorry, wrong answer! Correct Answer is \(stringActualAnswer)"
             }
         case option3:
             if (sender === option3 &&  actualAnswer == 3){
                 trivia.correctQuestions += 1
                 questionField.text = "Correct!"
             } else {
-                questionField.text = "Sorry, wrong answer!"
+                questionField.text = "Sorry, wrong answer! Correct Answer is \(stringActualAnswer)"
             }
         case option4:
             if (sender === option4 &&  actualAnswer == 4){
                 trivia.correctQuestions += 1
                 questionField.text = "Correct!"
             } else {
-                questionField.text = "Sorry, wrong answer!"
+                questionField.text = "Sorry, wrong answer! Correct Answer is \(stringActualAnswer)"
             }
         default : break;
             
         }
-    
-    
+        
+        //no question will be repeated within a single game.
+        trivia.questionFinished()
+        
+        
+        //debug
+        print("trivia questions asked = \(trivia.questionsAsked) , questions per round = \(trivia.questionsPerRound)");
+        
+        //
         
         loadNextRoundWithDelay(seconds: 2)
+        
+        
+        
+        
     }
     
     func nextRound() {
         if trivia.questionsAsked == trivia.questionsPerRound {
             // Game is over
             displayScore()
+            trivia.renewQuestions()
+            
         } else {
             // Continue game
             displayQuestion()
@@ -136,6 +152,9 @@ class ViewController: UIViewController {
     
     @IBAction func playAgain() {
         // Show the answer buttons
+        for option in options {
+            option.hidden = false
+        }
 
         
         trivia.questionsAsked = 0

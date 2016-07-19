@@ -16,10 +16,8 @@ struct Question {
     init(question: String, options: [String], answerIndex: Int){
         self.question = question
         self.options = options
-        self.answerIndex = answerIndex - 1
+        self.answerIndex = answerIndex
     }
     
-    func isCorrect(answer: String) -> Bool {
-        return answer == self.options[answerIndex]
-    }
+
 }

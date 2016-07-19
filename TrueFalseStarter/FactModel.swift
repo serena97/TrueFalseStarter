@@ -36,17 +36,24 @@ struct FactModel{
     
     var questionsPerRound: Int
     var indexOfSelectedQuestion: Int = 0
-    var questionsAsked = 0
+    var questionsAsked: Int
     var correctQuestions = 0
     
     init(){
     self.questions = [question1, question2, question3, question4, question5, question6, question7, question8, question9, question10]
-    
+    self.questionsAsked = 0
     self.questionsPerRound = questions.count
         
-    print("Hello")
     }
     
+    mutating func questionFinished(){
+        questionsAsked += 1
+        self.questions.removeAtIndex(indexOfSelectedQuestion)//removes the Question from the array. If play again, new FactModel() object is created so new questions are generated
+    }
+    
+    mutating func renewQuestions(){
+        self.questions = [question1, question2, question3, question4, question5, question6, question7, question8, question9, question10]
+    }
     
     
 }
